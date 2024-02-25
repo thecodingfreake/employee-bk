@@ -17,6 +17,28 @@ const pool = mysql.createPool('mysql://root:FBB2H2Cg-5ccfB-cbD3AAD6DhD1GAgbG@via
         }
     })
  })
+app.delete("/:id",(req,res)=>{
+    const eId = req.params.id;
+
+    if (!eId) {
+      return res.status(400).json({ error: 'Book ID is required' });
+    }
+  
+    const deleteQuery = 'DELETE FROM details WHERE id = ?';
+  
+    pool.query(deleteQuery, [eId], (err, results) => {
+      if (err) {
+        console.error('Error deleting employee from MySQL:', err);
+        return res.status(500).json({ error: 'Error deleting book from the database' });
+      }
+  
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ error: 'Book not found' });
+      }
+  
+      res.status(200).json({ message: 'Book deleted successfully' });
+    });
+})
 app.post("/entry",(req,res)=>{
     const data=req.body
     console.log(data)
