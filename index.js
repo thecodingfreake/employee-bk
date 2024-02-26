@@ -64,6 +64,25 @@ app.post("/entry",(req,res)=>{
     })
 
 }) 
+app.put("/edit/:id", (req, res) => {
+    const id = req.params.id;  // Extracting the id from the URL parameters
+    const updatef = req.body.updatef;
+    const value = req.body.value;
+
+    // Using string interpolation to build the SQL query
+    const updateQuery = `UPDATE details SET ${updatef} = ? WHERE id = ?`;
+
+    pool.query(updateQuery, [value, id], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ error: 'Error updating employee in the database' });
+        } else {
+            res.send("ok");
+        }
+    });
+});
+
+  
 const port=process.env.PORT||3000;
 app.listen(port,(req,res)=>{
     console.log("connected")
